@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Love Calculator Prank</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+  }
+  h2 {
+    margin-bottom: 20px;
+  }
+  label {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  input[type="text"] {
+    padding: 10px;
+    margin: 10px;
+    width: 200px;
+    font-size: 16px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  #result {
+    margin-top: 30px;
+    font-size: 20px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Love Calculator</h2>
+<label for="name1">Name 1:</label><br/>
+<input type="text" id="name1" placeholder="Enter first name" /><br />
+
+<label for="name2">Name 2:</label><br/>
+<input type="text" id="name2" placeholder="Enter second name" /><br />
+
+<button onclick="calculateLove()">Calculate</button>
+
+<div id="result"></div>
+
+<script>
+function calculateLove() {
+  const name1 = document.getElementById('name1').value.trim();
+  const name2 = document.getElementById('name2').value.trim();
+
+  // Generate a random percentage between 50 and 100
+  const chance = Math.floor(Math.random() * 51) + 50;
+
+  const resultDiv = document.getElementById('result');
+
+  if (name1 && name2) {
+    resultDiv.innerHTML = `
+      <p><strong>${name1}</strong> and <strong>${name2}</strong> got pranked!</p>
+      <p>You have a <strong>${chance}%</strong> chance of getting together.</p>
+      <p><em>Created by AI Chat</em></p>
+    `;
+  } else {
+    resultDiv.innerHTML = `<p>Please enter both names.</p>`;
+  }
+}
+</script>
+
+</body>
+</html>
