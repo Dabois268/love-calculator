@@ -3,74 +3,263 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Love Calculator Prank</title>
+<title>Love Compatibility</title>
 <style>
   body {
+    background-color: pink;
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    margin: 0;
     padding: 20px;
     text-align: center;
   }
-  h2 {
-    margin-bottom: 20px;
+
+  /* Hearts styling */
+  .hearts {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
   }
-  label {
-    display: inline-block;
-    margin-top: 10px;
-    font-weight: bold;
+  
+  .heart {
+    font-size: 50px;
+    cursor: pointer;
+    margin: 20px;
+    transition: transform 0.2s;
   }
-  input[type="text"] {
-    padding: 10px;
-    margin: 10px;
-    width: 200px;
-    font-size: 16px;
+  .heart:hover {
+    transform: scale(1.2);
   }
-  button {
+
+  /* Input boxes and labels */
+  .inputs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+  }
+
+  input {
+    padding: 8px;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+
+  .plus {
+    font-size: 30px;
+    margin: 0 10px;
+    align-self: center;
+  }
+
+  /* Enter button */
+  #enterBtn {
+    display: block;
+    margin: 20px auto;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
   }
+
+  /* Result display */
   #result {
-    margin-top: 30px;
-    font-size: 20px;
+    font-size: 24px;
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  /* Signup section */
+  .signup {
+    margin-top: 50px;
+    border: 2px solid #fff;
+    padding: 20px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+  }
+
+  .signup h3 {
+    margin-top: 0;
+  }
+
+  input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    box-sizing: border-box;
+  }
+
+  #signupBtn {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* User messages */
+  #userMessages {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
   }
 </style>
 </head>
 <body>
 
-<h2>Love Calculator</h2>
-<label for="name1">Name 1:</label><br/>
-<input type="text" id="name1" placeholder="Enter first name" /><br />
+<h1>Love Compatibility</h1>
 
-<label for="name2">Name 2:</label><br/>
-<input type="text" id="name2" placeholder="Enter second name" /><br />
+<!-- Hearts -->
+<div class="hearts">
+  <div class="heart" id="heart1" title="Click me">&#10084;</div>
+  <div class="heart" id="heart2" title="Click me">&#10084;</div>
+  <div class="heart" id="heart3" title="Click me">&#10084;</div>
+</div>
 
-<button onclick="calculateLove()">Calculate</button>
+<!-- Inputs for Name & Crush -->
+<div class="inputs-container">
+  <div class="input-group">
+    <label for="yourName">Your Name</label>
+    <input type="text" id="yourName" placeholder="Enter your name" />
+  </div>
+  <div class="plus">+</div>
+  <div class="input-group">
+    <label for="crushName">Crush Name</label>
+    <input type="text" id="crushName" placeholder="Enter crush name" />
+  </div>
+</div>
 
+<!-- Enter button -->
+<button id="enterBtn">Enter</button>
+
+<!-- Result display -->
 <div id="result"></div>
 
+<!-- Signup section -->
+<div class="signup">
+  <h3>Sign Up</h3>
+  <input type="email" id="signupEmail" placeholder="Email" />
+  <input type="password" id="signupPassword" placeholder="Password" />
+  <button id="signupBtn">Sign Up</button>
+</div>
+
+<!-- User messages (sent messages display) -->
+<div id="userMessages">
+  <h3>Messages from Users</h3>
+  <div id="messagesList"></div>
+</div>
+
 <script>
-function calculateLove() {
-  const name1 = document.getElementById('name1').value.trim();
-  const name2 = document.getElementById('name2').value.trim();
+  // Store user data in localStorage for demo purposes
+  let users = JSON.parse(localStorage.getItem('users')) || [];
 
-  // Generate a random percentage between 50 and 100
-  const chance = Math.floor(Math.random() * 51) + 50;
+  // Hearts click states
+  let heartClicked = [false, false, false];
 
-  const resultDiv = document.getElementById('result');
+  document.getElementById('heart1').addEventListener('click', () => {
+    heartClicked[0] = !heartClicked[0];
+    toggleHeart('heart1');
+  });
+  document.getElementById('heart2').addEventListener('click', () => {
+    heartClicked[1] = !heartClicked[1];
+    toggleHeart('heart2');
+  });
+  document.getElementById('heart3').addEventListener('click', () => {
+    heartClicked[2] = !heartClicked[2];
+    toggleHeart('heart3');
+  });
 
-  if (name1 && name2) {
-    resultDiv.innerHTML = `
-      <p><strong>${name1}</strong> and <strong>${name2}</strong> got pranked!</p>
-      <p>You have a <strong>${chance}%</strong> chance of getting together.</p>
-      <p><em>Created by AI Chat</em></p>
-    `;
-  } else {
-    resultDiv.innerHTML = `<p>Please enter both names.</p>`;
+  function toggleHeart(id) {
+    const element = document.getElementById(id);
+    if (heartClicked[id === 'heart1' ? 0 : id === 'heart2' ? 1 : 2]) {
+      element.style.color = 'red';
+    } else {
+      element.style.color = 'black';
+    }
   }
-}
-</script>
 
+  // Handle Enter button click
+document.getElementById('enterBtn').addEventListener('click', () => {
+  const name1 = document.getElementById('yourName').value.trim();
+  const name2 = document.getElementById('crushName').value.trim();
+  if (name1 && name2) {
+    const percent = Math.floor(Math.random() * 100) + 1;
+    document.getElementById('result').innerText = `${percent}%`;
+  } else {
+    alert('Please enter both names.');
+  }
+});
+
+// Handle Sign Up
+document.getElementById('signupBtn').addEventListener('click', () => {
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+
+  if (!email || !password) {
+    alert('Please fill in email and password.');
+    return;
+  }
+
+  // Save user info
+  users.push({ email, password, message: '' });
+  localStorage.setItem('users', JSON.stringify(users));
+  alert('Signed up successfully!');
+
+  // Clear inputs
+  document.getElementById('signupEmail').value = '';
+  document.getElementById('signupPassword').value = '';
+});
+
+// Send message feature
+// Just a simple prompt to send message
+function sendMessage() {
+  const email = prompt('Enter your email to send a message:');
+  if (!email) return;
+
+  const message = prompt('Enter your message:');
+  if (!message) return;
+
+  // Save message to localStorage
+  users.forEach(user => {
+    if (user.email === email) {
+      user.message = message;
+    }
+  });
+  localStorage.setItem('users', JSON.stringify(users));
+  displayMessages();
+}
+
+// Display messages from users
+function displayMessages() {
+  const messagesDiv = document.getElementById('messagesList');
+  messagesDiv.innerHTML = '';
+  users.forEach(user => {
+    if (user.message) {
+      const msg = document.createElement('div');
+      msg.innerText = `${user.email}: ${user.message}`;
+      messagesDiv.appendChild(msg);
+    }
+  });
+}
+
+// Optional: add a button or link to send messages
+// For demo, automatically display messages on page load
+displayMessages();
+
+// Optional: add event listener for clicking the third heart to trigger message sending
+document.getElementById('heart3').addEventListener('click', () => {
+  sendMessage();
+});
+</script>
 </body>
 </html>
